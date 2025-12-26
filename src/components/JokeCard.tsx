@@ -24,16 +24,13 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
     }, []);
 
     const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-        // Calculate final time when drag starts
         const timeSpent = Math.floor((Date.now() - mountTimeRef.current) / 1000);
         e.dataTransfer.setData('jokeId', joke.id);
         e.dataTransfer.setData('timeSpent', timeSpent.toString());
         e.dataTransfer.effectAllowed = 'move';
 
-        // Add a ghost image or styling class
         e.currentTarget.classList.add('dragging');
 
-        // Pass up to parent if needed, but dataTransfer is main vehicle
         onDragStart(e, joke.id, timeSpent);
     };
 
@@ -55,7 +52,6 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
     };
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-        // Prevent scrolling while dragging
         e.preventDefault();
 
         const touch = e.touches[0];
@@ -70,7 +66,7 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
     };
 
     const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-        // Reset styles first
+    
         if (cardRef.current) {
             cardRef.current.classList.remove('dragging');
             cardRef.current.style.zIndex = '';
@@ -80,12 +76,10 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
 
         const touch = e.changedTouches[0];
 
-        // Hide card momentarily so we can see what's underneath
         if (cardRef.current) cardRef.current.style.visibility = 'hidden';
 
         const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
 
-        // Restore visibility
         if (cardRef.current) cardRef.current.style.visibility = 'visible';
 
         if (!elemBelow) return;

@@ -18,7 +18,7 @@ function App() {
   const [filterLoved, setFilterLoved] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
-  // Load from Storage
+
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -33,13 +33,12 @@ function App() {
       fetchJokes();
     }
 
-    // Check system preference
+
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setDarkMode(true);
     }
   }, []);
 
-  // Save to Storage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ jokes, sortedJokes }));
   }, [jokes, sortedJokes]);
@@ -47,8 +46,6 @@ function App() {
   const fetchJokes = async () => {
     setLoading(true);
     try {
-      // Use the search endpoint to fetch 5 jokes at once as requested
-      // Adding a random page to ensure some randomness since /search defaults to latest
       const randomPage = Math.floor(Math.random() * 20) + 1;
       const res = await fetch(`https://icanhazdadjoke.com/search?limit=5&page=${randomPage}`, {
         headers: { 'Accept': 'application/json' }
@@ -77,21 +74,17 @@ function App() {
   };
 
   const handleDragStart = () => {
-    // Optional: Add global visual feedback
   };
 
   const handleJokeDrop = (jokeId: string, timeSpent: number, reaction: Reaction) => {
-    // Find joke
     const jokeIndex = jokes.findIndex(j => j.id === jokeId);
     if (jokeIndex === -1) return;
 
     const joke = jokes[jokeIndex];
 
-    // Add to sorted
     const sorted: SortedJoke = { ...joke, reaction, timeSpent };
     setSortedJokes(prev => [sorted, ...prev]);
 
-    // Remove from main list
     const newJokes = [...jokes];
     newJokes.splice(jokeIndex, 1);
     setJokes(newJokes);
@@ -101,11 +94,9 @@ function App() {
     if (sortedJokes.length === 0) return;
     const lastSorted = sortedJokes[0];
 
-    // Remove from sorted
     const newSorted = sortedJokes.slice(1);
     setSortedJokes(newSorted);
 
-    // Add back to jokes (top of stack)
     const { reaction, timeSpent, ...originalJoke } = lastSorted;
     setJokes(prev => [originalJoke, ...prev]);
   };
@@ -121,7 +112,7 @@ function App() {
     ? sortedJokes.filter(j => j.reaction === 'loved')
     : sortedJokes;
 
-  // Toggle body class
+  
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add('dark');
@@ -184,16 +175,13 @@ function App() {
             )}
           </div>
 
-          {/* Column 2: Zones & Summary */}
           <div className="flex flex-col gap-4">
-            {/* Zones */}
             <h2 className="text-xl font-bold mb-2">Sorter Zones</h2>
             <div className="zone-container" style={{ marginTop: 0 }}>
               <DropZone type="not-funny" onJokeDrop={(id, time) => handleJokeDrop(id, time, 'not-funny')} />
               <DropZone type="loved" onJokeDrop={(id, time) => handleJokeDrop(id, time, 'loved')} />
             </div>
 
-            {/* Toolbar */}
             <div className="flex justify-between items-center mt-4 card p-4">
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">

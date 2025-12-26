@@ -10,7 +10,7 @@ export const DropZone: React.FC<DropZoneProps> = ({ type, onJokeDrop }) => {
     const [isActive, setIsActive] = useState(false);
 
     const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault(); // Essential for onDrop to fire
+        e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
     };
 
