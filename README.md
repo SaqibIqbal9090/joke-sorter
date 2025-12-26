@@ -5,13 +5,9 @@
 Simple: It fetches fresh jokes from the web, and you play critic.
 - **Read & React**: You get a list of jokes.
 - **Sort 'em out**: Drag the good ones to "Loved It" and the bad ones to "Not Funny".
-- **Track the time**: We secretly (well, openly) track how long you hesitated before judging each joke.
-- **Oops button**: Made a mistake? There's an "Undo" button to save that poor joke you accidentally rejected.
+- **Track the time**:Track how long you hesitated before judging each joke.
+- **undo button**:There's an "Undo" button to save that poor joke you accidentally rejected.
 
-## Features
-- **Dark Mode**: Automatically respects your system settings, or you can toggle it manually if you're browsing late at night.
-- **Auto-Save**: Refreshing the page won't lose your sorted jokes. They live safe and sound in your local storage.
-- **Snappy UI**: Built with Vite, so it's fast. No heavy UI libraries, just clean, vanilla CSS and smooth animations.
 
 ## Tech Stack
 
