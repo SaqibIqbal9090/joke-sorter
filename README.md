@@ -1,9 +1,5 @@
 # Draggable Joke Sorter
 
-Hey there! Welcome to the **Draggable Joke Sorter**.
-
-This is a fun, interactive web app built to help you decide whether a "Dad Joke" is solid gold or just plain terrible. I built this as part of a frontend assessment, but I wanted to make sure it felt like a real, polished product that you'd actually enjoy using.
-
 ## What does it do?
 
 Simple: It fetches fresh jokes from the web, and you play critic.
@@ -12,9 +8,7 @@ Simple: It fetches fresh jokes from the web, and you play critic.
 - **Track the time**: We secretly (well, openly) track how long you hesitated before judging each joke.
 - **Oops button**: Made a mistake? There's an "Undo" button to save that poor joke you accidentally rejected.
 
-## Cool Features
-
-- **Mobile Friendly**: Yes, you can drag and drop on your phone! I built a custom touch handler just for this since native HTML5 drag-and-drop is a bit shy on mobile.
+## Features
 - **Dark Mode**: Automatically respects your system settings, or you can toggle it manually if you're browsing late at night.
 - **Auto-Save**: Refreshing the page won't lose your sorted jokes. They live safe and sound in your local storage.
 - **Snappy UI**: Built with Vite, so it's fast. No heavy UI libraries, just clean, vanilla CSS and smooth animations.
