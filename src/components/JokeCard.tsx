@@ -11,7 +11,6 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
     const [seconds, setSeconds] = useState(0);
     const mountTimeRef = useRef(Date.now());
 
-    // Mobile Touch Refs
     const touchStartRef = useRef({ x: 0, y: 0 });
     const currentTranslateRef = useRef({ x: 0, y: 0 });
     const cardRef = useRef<HTMLDivElement>(null);
@@ -38,14 +37,11 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
         e.currentTarget.classList.remove('dragging');
     };
 
-    // --- Touch Logic for Mobile ---
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
         const touch = e.touches[0];
         touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-
-        // Add visual feedback
         if (cardRef.current) {
-            cardRef.current.style.transition = 'none'; // Disable transition for direct 1:1 movement
+            cardRef.current.style.transition = 'none';
             cardRef.current.style.zIndex = '1000';
             cardRef.current.classList.add('dragging');
         }
@@ -71,7 +67,7 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
             cardRef.current.classList.remove('dragging');
             cardRef.current.style.zIndex = '';
             cardRef.current.style.transform = '';
-            cardRef.current.style.transition = ''; // Restore CSS transition
+            cardRef.current.style.transition = ''; 
         }
 
         const touch = e.changedTouches[0];
