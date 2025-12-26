@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Documentation
+TECHNICAL_DEEP_DIVE.md
