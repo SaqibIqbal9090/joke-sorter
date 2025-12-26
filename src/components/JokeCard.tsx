@@ -37,58 +37,67 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
         e.currentTarget.classList.remove('dragging');
     };
 
-    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-        const touch = e.touches[0];
-        touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-        if (cardRef.current) {
-            cardRef.current.style.transition = 'none';
-            cardRef.current.style.zIndex = '1000';
-            cardRef.current.classList.add('dragging');
-        }
-    };
+    useEffect(() => {
+        const card = cardRef.current;
+        if (!card) return;
 
-    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-        e.preventDefault();
+        const handleTouchStart = (e: TouchEvent) => {
+            const touch = e.touches[0];
+            touchStartRef.current = { x: touch.clientX, y: touch.clientY };
 
-        const touch = e.touches[0];
-        const deltaX = touch.clientX - touchStartRef.current.x;
-        const deltaY = touch.clientY - touchStartRef.current.y;
+            card.style.transition = 'none';
+            card.style.zIndex = '1000';
+            card.classList.add('dragging');
+        };
 
-        currentTranslateRef.current = { x: deltaX, y: deltaY };
+        const handleTouchMove = (e: TouchEvent) => {
+            if (e.cancelable) e.preventDefault();
 
-        if (cardRef.current) {
-            cardRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(2deg) scale(0.95)`;
-        }
-    };
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - touchStartRef.current.x;
+            const deltaY = touch.clientY - touchStartRef.current.y;
 
-    const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    
-        if (cardRef.current) {
-            cardRef.current.classList.remove('dragging');
-            cardRef.current.style.zIndex = '';
-            cardRef.current.style.transform = '';
-            cardRef.current.style.transition = ''; 
-        }
+            currentTranslateRef.current = { x: deltaX, y: deltaY }; 
 
-        const touch = e.changedTouches[0];
+            card.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(2deg) scale(0.95)`;
+        };
 
-        if (cardRef.current) cardRef.current.style.visibility = 'hidden';
+        const handleTouchEnd = (e: TouchEvent) => {
+            card.classList.remove('dragging');
+            card.style.zIndex = '';
+            card.style.transform = '';
+            card.style.transition = '';
 
-        const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const touch = e.changedTouches[0];
 
-        if (cardRef.current) cardRef.current.style.visibility = 'visible';
+            // Hide card momentarily to find what's underneath
+            card.style.visibility = 'hidden';
+            const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            card.style.visibility = 'visible';
 
-        if (!elemBelow) return;
+            if (!elemBelow) return;
 
-        const dropZone = elemBelow.closest('[data-zone-type]');
-        if (dropZone && onMobileDrop) {
-            const reaction = dropZone.getAttribute('data-zone-type') as Reaction;
-            const timeSpent = Math.floor((Date.now() - mountTimeRef.current) / 1000);
-            if (reaction) {
-                onMobileDrop(joke.id, timeSpent, reaction);
+            const dropZone = elemBelow.closest('[data-zone-type]');
+            if (dropZone && onMobileDrop) {
+                const reaction = dropZone.getAttribute('data-zone-type') as Reaction;
+                const timeSpent = Math.floor((Date.now() - mountTimeRef.current) / 1000);
+                if (reaction) {
+                    onMobileDrop(joke.id, timeSpent, reaction);
+                }
             }
-        }
-    };
+        };
+
+        // Attach non-passive listeners
+        card.addEventListener('touchstart', handleTouchStart, { passive: false });
+        card.addEventListener('touchmove', handleTouchMove, { passive: false });
+        card.addEventListener('touchend', handleTouchEnd);
+
+        return () => {
+            card.removeEventListener('touchstart', handleTouchStart);
+            card.removeEventListener('touchmove', handleTouchMove);
+            card.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, [joke.id, onMobileDrop, mountTimeRef]); // Re-attach if props change
 
     return (
         <div
@@ -96,9 +105,7 @@ export const JokeCard: React.FC<JokeCardProps> = ({ joke, onDragStart, onMobileD
             draggable
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            // Touch listeners are now handled in useEffect
             className="card joke-card-draggable animate-fade-in"
             style={{ marginBottom: '1rem', cursor: 'grab' }}
         >
